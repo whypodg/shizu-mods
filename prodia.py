@@ -139,7 +139,7 @@ class Prodia(loader.Module):
 		sampler = self.db.get("Prodia", "sampler", "Euler")
 		steps = self.db.get("Prodia", "steps", 30)
 
-		neg_out = f"\n<b><i>Отрицательный запрос</i></b>: <code>{neg_prompt}</code>" if neg_prompt else ""
+		neg_out = f"\n<b><i>Отрицательный запрос:</i></b> <code>{neg_prompt}</code>" if neg_prompt else ""
 		msg = await utils.answer(
 			message,
 			f"🎨 <b>Работаю над изображением…</b>\n"
