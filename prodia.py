@@ -122,7 +122,7 @@ class Prodia(loader.Module):
 		if "\n" in prompt:
 			prompt, neg_prompt = prompt.split("\n", 1)
 
-		if neg_prompt == "[]":
+		if not neg_prompt or neg_prompt == "[]":
 			neg_prompt = self.db.get(
 				name="Prodia", key="neg_def",
 				default="(bad_prompt:0.8), multiple persons, multiple views, extra hands, " \
@@ -145,10 +145,10 @@ class Prodia(loader.Module):
 			f"🎨 <b>Работаю над изображением…</b>\n"
 			f"<b>Запрос:</b> <code>{prompt}</code>{neg_out}\n\n"
 			f"<b>Указанные параметры:</b>\n"
-			f"<i>Модель:</i> {model} — ID <code>{mid}</code>\n"
-			f"<i>CFG</i>: {cfg}\n"
-			f"<i>Сэмплер:</i> {sampler}\n"
-			f"<i>Шаги:</i> {steps}",
+			f"<b><i>Модель:</i></b> <code>{model}</code> — ID <code>{mid}</code>\n"
+			f"<b><i>CFG:</i></b> <code>{cfg}</code>\n"
+			f"<b><i>Сэмплер:</i></b> <code>{sampler}</code>\n"
+			f"<b><i>Шаги:</i></b> <code>{steps}</code>",
 		)
 
 		pars = {
@@ -183,9 +183,9 @@ class Prodia(loader.Module):
 			photo=True,
 			caption=f"🎉 <b>Ваше изображение готово!</b>\n" \
 					f"<b>Запрос:</b> <code>{prompt}</code>{neg_out}\n\n" \
-					f"<i>Модель:</i> {model} — ID <code>{mid}</code>\n" \
-					f"<i>CFG:</i> {cfg}\n" \
-					f"<i>Сэмплер:</i> {sampler}\n" \
-					f"<i>Шаги:</i> {steps}\n"
+					f"<b><i>Модель:</i></b> <code>{model}</code> — ID <code>{mid}</code>\n" \
+					f"<b><i>CFG:</i></b> <code>{cfg}</code>\n" \
+					f"<b><i>Сэмплер:</i></b> <code>{sampler}</code>\n" \
+					f"<b><i>Шаги:</i></b> <code>{steps}</code>\n"
 		)
 		await msg.delete()
