@@ -63,7 +63,7 @@ class Prodia(loader.Module):
 		args = utils.get_args_raw(message).split()
 		if (len(args) < 2) or (args[0] not in ["model", "negative", "cfg", "steps", "sampler"]):
 			if len(args) < 2:
-				out = f"<emoji id=5312526098750252863>❌</emoji> <b>Вы не указали значение настройки"
+				out = f"<emoji id=5312526098750252863>❌</emoji> <b>Недостаточно аргументов"
 			else:
 				out = f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверную настройку, вот " \
 					  f"доступные настройки:</b>\n<code>model</code>, <code>negative</code>, <code>cfg</code>, " \
