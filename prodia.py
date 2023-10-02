@@ -62,17 +62,21 @@ class Prodia(loader.Module):
 	async def setprodia(self, app: Client, message: types.Message):
 		args = utils.get_args_raw(message).split()
 		if (len(args) < 2) or (args[0] not in ["model", "negative", "cfg", "steps", "sampler"]):
+			if len(args) < 2:
+				out = f"<emoji id=5312526098750252863>❌</emoji> <b>Вы не указали значение настройки"
+			else:
+				out = f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверную настройку, вот " \
+					  f"доступные настройки:</b>\n<code>model</code>, <code>negative</code>, <code>cfg</code>, " \
+					  f"<code>steps</code>, <code>sampler</code>"
 			return await utils.answer(
 				message=message,
-				response=f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверную настройку вот " \
-						 f"доступные настройки:</b>\n<code>model</code>, <code>negative</code>, <code>cfg</code>, " \
-						 f"<code>steps</code>, <code>sampler</code>"
+				response=out
 			)
 
 		if args[0] == "model" and args[1] not in name_models.keys():
 			out = f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, вот доступные значения:</b>"
 			for i in name_models.keys():
-				out += f"\n  ▪ <code>i</code>"
+				out += f"\n  ▪ <code>{i}</code>"
 			return await utils.answer(
 				message=message,
 				response=out
