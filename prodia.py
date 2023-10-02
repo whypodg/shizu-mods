@@ -60,7 +60,7 @@ class Prodia(loader.Module):
 
 	@loader.command(docs="<настройка> <значение> — Изменить настройки")
 	async def setprodia(self, app: Client, message: types.Message):
-		args = utils.get_args_raw(message).split()
+		args = utils.get_args_raw(message).split(maxsplit=1)
 		if (len(args) < 2) or (args[0] not in ["model", "negative", "cfg", "steps", "sampler"]):
 			if len(args) < 2:
 				out = f"<emoji id=5312526098750252863>❌</emoji> <b>Недостаточно аргументов"
