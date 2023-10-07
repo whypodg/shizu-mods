@@ -58,67 +58,61 @@ name_models = {
 class Prodia(loader.Module):
 	"""Генератор изображений на основе Prodia API, не требует API ключа. На основе модуля для 🌘 Hikka от @sonnestinkt"""
 
-	@loader.command(docs="<настройка> <значение> — Изменить настройки")
+	@loader.command()
 	async def setprodia(self, app: Client, message: types.Message):
-		args = utils.get_args_raw(message).split(maxsplit=1)
-		if (len(args) < 2) or (args[0] not in ["model", "negative", "cfg", "steps", "sampler"]):
-			if len(args) < 2:
-				out = f"<emoji id=5312526098750252863>❌</emoji> <b>Недостаточно аргументов"
-			else:
-				out = f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверную настройку, вот " \
-					  f"доступные настройки:</b>\n<code>model</code>, <code>negative</code>, <code>cfg</code>, " \
-					  f"<code>steps</code>, <code>sampler</code>"
-			return await utils.answer(
-				message=message,
+		"""<настройка> <значение> — Изменить настройки"""
+		args = message.get_args_raw(message).split(maxsplit=1)
+		if len(args) < 2:
+			out = "<emoji id=5312526098750252863>❌</emoji> <b>Недостаточно аргументов</b>"
+			return await message.answer(
+				response=out
+			)
+
+		elif args[0] not in ["model", "negative", "cfg", "steps", "sampler"]:
+			out = "<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверную настройку, вот " \
+								  "доступные настройки:</b>\n<code>model</code>, <code>negative</code>, <code>cfg</code>, " \
+								  "<code>steps</code>, <code>sampler</code>"
+			return await message.answer(
 				response=out
 			)
 
 		if args[0] == "model" and args[1] not in name_models.keys():
-			out = f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, вот доступные значения:</b>"
+			out = "<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, вот доступные значения:</b>"
 			for i in name_models.keys():
 				out += f"\n  ▪ <code>{i}</code>"
-			return await utils.answer(
-				message=message,
+			return await message.answer(
 				response=out
 			)
 		elif args[0] == "cfg" and (not args[1].isdigit() or (int(args[1]) > 20 or int(args[1]) < 0)):
-			return await utils.answer(
-				message=message,
-				response=f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, " \
-						 f"доступные значения — числа от 0 до 20</b>"
+			return await message.answer(
+				response='<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, доступные значения — числа от 0 до 20</b>',
 			)
 		elif args[0] == "steps" and (not args[1].isdigit() or (int(args[1]) > 30 or int(args[1]) < 1)):
-			return await utils.answer(
-				message=message,
-				response=f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, " \
-						 f"доступные значения — числа от 1 до 30</b>"
+			return await message.answer(
+				response='<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, доступные значения — числа от 1 до 30</b>',
 			)
 		elif args[0] == "sampler" and args[1] not in ["Euler", "Euler a", "Heun", "DPM++ 2M Karras", "DDIM"]:
-			return await utils.answer(
-				message=message,
-				response=f"<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, " \
-						 f"вот доступные значения:</b>\n<code>Euler</code>, <code>Euler a</code>, <code>Heun</code>, <code>DPM++ 2M Karras</code>, <code>DDIM</code>"
+			return await message.answer(
+				response="<emoji id=5312526098750252863>❌</emoji> <b>Вы указали неверное значение для настройки, " \
+										 f"вот доступные значения:</b>\n<code>Euler</code>, <code>Euler a</code>, <code>Heun</code>, <code>DPM++ 2M Karras</code>, <code>DDIM</code>"
 			)
 
 		self.db.set(
 			name="Prodia", key=args[0],
 			value=args[1] if args[0] not in ['cfg', 'steps'] else int(args[1])
 		)
-		await utils.answer(
-			message=message,
+		await message.answer(
 			response=f"<emoji id=5314250708508220914>✅</emoji> Успешно изменил значение настройки <code>[{args[0]}]</code> " \
-					 f"на [<code>{args[1]}</code>]"
+									 f"на [<code>{args[1]}</code>]"
 		)
 
-
-	@loader.command(docs="Сгенерировать изображение с помощью Prodia API")
+	@loader.command()
 	async def prodia(self, app: Client, message: types.Message):
+		"""Сгенерировать изображение с помощью Prodia API"""
 		prompt = utils.get_args_raw(message)
 		neg_prompt = ""
 		if not prompt:
-			return await utils.answer(
-				message, "<emoji id=5312526098750252863>❌</emoji> <b>Вы не указали аргументы…</b>"
-			)
+			return	 await message.answer("526098750252863>❌</emoji> <b>Вы не указали аргументы…</b>")
 		if "\n" in prompt:
 			prompt, neg_prompt = prompt.split("\n", 1)
 
@@ -140,8 +134,7 @@ class Prodia(loader.Module):
 		steps = self.db.get("Prodia", "steps", 30)
 
 		neg_out = f"\n<b><i>Отрицательный запрос:</i></b> <code>{neg_prompt}</code>" if neg_prompt else ""
-		msg = await utils.answer(
-			message,
+		msg = await message.answer(
 			f"🎨 <b>Работаю над изображением…</b>\n"
 			f"<b>Запрос:</b> <code>{prompt}</code>{neg_out}\n\n"
 			f"<b>Указанные параметры:</b>\n"
@@ -177,8 +170,7 @@ class Prodia(loader.Module):
 						break
 					await asyncio.sleep(0.15)
 
-		await utils.answer(
-			message=msg,
+		await message.answer(
 			response=f"https://images.prodia.xyz/{job_id}.png",
 			photo=True,
 			caption=f"🎉 <b>Ваше изображение готово!</b>\n" \
