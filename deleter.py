@@ -21,10 +21,10 @@ from .. import loader, utils
 class DeleterMod(loader.Module):
 	"""Модуль для удаления твоих N сообщений"""
 
-	@loader.command(
-		docs="Удалить сообщения"
-	)
-	async def delmsg(self, app: Client, message: types.Message):
+	@loader.command()
+	async def delmsgcmd(self, app: Client, message: types.Message):
+		"""Удалить сообщения"""
+
 		args = message.text.split()[1:]
 		count = 1
 		if args and args[0].isdigit():
@@ -54,10 +54,10 @@ class DeleterMod(loader.Module):
 			await asyncio.sleep(0.5)
 
 
-	@loader.command(
-		docs="Включить/выключить редактирование сообщений перед их удалением"
-	)
-	async def editmsgs(self, app: Client, message: types.Message):
+	@loader.command()
+	async def editmsgscmd(self, app: Client, message: types.Message):
+		"""Включить/выключить редактирование сообщений перед их удалением"""
+
 		edit_need = self.db.get("DeleterMod", "edit_need", False)
 		need = False if edit_need else True
 		self.db.set("DeleterMod", "edit_need", need)
@@ -68,10 +68,10 @@ class DeleterMod(loader.Module):
 		)
 
 
-	@loader.command(
-		docs="Изменить текст редактирования сообщений (если указать «-» — изменит текст на невидимый символ)"
-	)
-	async def setedittext(self, app: Client, message: types.Message):
+	@loader.command()
+	async def setedittextcmd(self, app: Client, message: types.Message):
+		"""Изменить текст редактирования сообщений (если указать «-» — изменит текст на невидимый символ)"""
+
 		edit_text = self.db.get("DeleterMod", "edit_text", None)
 		args = utils.get_args_raw(message)
 		text = args if args and args not in ["-", "–", "—"] else "\xad"

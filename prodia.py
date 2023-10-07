@@ -14,6 +14,9 @@
 #
 #             👤 https://t.me/whypodg
 
+# Module based on mod for 🌘 Hikka
+# Original: 
+
 # required: aiohttp
 
 import aiohttp
@@ -56,10 +59,12 @@ name_models = {
 
 @loader.module(name="Prodia", author="whypodg", version=1.0)
 class Prodia(loader.Module):
-	"""Генератор изображений на основе Prodia API, не требует API ключа. На основе модуля для 🌘 Hikka от @sonnestinkt"""
+	"""Генератор изображений на основе Prodia API. Не требует API ключа."""
 
-	@loader.command(docs="<настройка> <значение> — Изменить настройки")
-	async def setprodia(self, app: Client, message: types.Message):
+	@loader.command()
+	async def setprodiacmd(self, app: Client, message: types.Message):
+		"""<настройка> <значение> — Изменить настройки"""
+
 		args = utils.get_args_raw(message).split(maxsplit=1)
 		if (len(args) < 2) or (args[0] not in ["model", "negative", "cfg", "steps", "sampler"]):
 			if len(args) < 2:
@@ -111,8 +116,10 @@ class Prodia(loader.Module):
 		)
 
 
-	@loader.command(docs="Сгенерировать изображение с помощью Prodia API")
-	async def prodia(self, app: Client, message: types.Message):
+	@loader.command()
+	async def prodiacmd(self, app: Client, message: types.Message):
+		"""Сгенерировать изображение с помощью Prodia API"""
+
 		prompt = utils.get_args_raw(message)
 		neg_prompt = ""
 		if not prompt:

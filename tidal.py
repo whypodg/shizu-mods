@@ -45,10 +45,10 @@ class Tidal(loader.Module):
 			return tidalapi.Session()
 
 
-	@loader.command(
-		docs="Авторизация в TIDAL"
-	)
-	async def tlogin(self, app: Client, message: types.Message):
+	@loader.command()
+	async def tlogincmd(self, app: Client, message: types.Message):
+		"""Авторизация в TIDAL"""
+
 		tidal = self.tidalLogin()
 		if tidal.check_login():
 			await utils.answer(message, "<emoji id=5312526098750252863>🚫</emoji> <b>Ты уже авторизован</b>")
@@ -91,10 +91,10 @@ class Tidal(loader.Module):
 		future.add_done_callback(callback)
 
 
-	@loader.command(
-		docs="Поиск в TIDAL"
-	)
-	async def tidal(self, app: Client, message: types.Message):
+	@loader.command()
+	async def tidalcmd(self, app: Client, message: types.Message):
+		"""Поиск в TIDAL"""
+
 		stidal = self.tidalLogin()
 		if not stidal:
 			await utils.answer(message, "<emoji id=5312526098750252863>❌</emoji> <b>Сначала нужно авторизоваться</b>")
