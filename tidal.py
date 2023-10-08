@@ -161,6 +161,7 @@ class Tidal(loader.Module):
 		track_by = requests.get(track_res['url']).content
 		file = io.BytesIO(track_by)
 		file.name = "track.mp3"
+		app.me = await app.get_me()
 		await app.send_audio(
 			chat_id=message.chat.id, caption=text, audio=file,
 			duration=track_res['duration'], title=track_res['name'],
