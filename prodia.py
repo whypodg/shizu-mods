@@ -55,7 +55,7 @@ name_models = {
 
 @loader.module(name="Prodia", author="whypodg", version=1.0)
 class Prodia(loader.Module):
-	"""Генератор изображений на основе Prodia API. Не требует API ключа."""
+	"""Генератор изображений на основе Prodia API. Не требует API ключа. Автор: @sonnestinkt, оригинал: https://raw.githubusercontent.com/GD-alt/mm-hikka-mods/main/Prodia.py, список изменений: https://yaso.su/Uhunm4fO"""
 
 	@loader.command()
 	async def setprodiacmd(self, app: Client, message: types.Message):
